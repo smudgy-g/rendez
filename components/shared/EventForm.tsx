@@ -37,7 +37,6 @@ const EventForm = ({ userId, type }: EventFormProps) => {
   const [files, setFiles] = useState<File[]>([])
   const initialValues = eventDefaultValues
 
-
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: initialValues,
@@ -50,7 +49,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
     if (files.length > 0) {
       const uploadedImage = await put(files[0].name, files[0], {
         access: 'public',
-      });
+      })
       // const uploadedImage = (await imageResult.json()) as PutBlobResult
       console.log(uploadedImage)
 
@@ -61,9 +60,9 @@ const EventForm = ({ userId, type }: EventFormProps) => {
     if (type == 'Create') {
       try {
         const newEvent = await createEvent({
-          event: { ...values, imageUrl: uploadedImageUrl},
+          event: { ...values, imageUrl: uploadedImageUrl },
           userId,
-          path: '/profile'
+          path: '/profile',
         })
 
         if (newEvent) {
@@ -278,11 +277,10 @@ const EventForm = ({ userId, type }: EventFormProps) => {
                                 Free Ticket
                               </label>
                               <Checkbox
-                                {...field}
-                                id="isFree"
-                                className="mr-2 h-5 w-5 border-2"
                                 onCheckedChange={field.onChange}
                                 checked={field.value}
+                                id="isFree"
+                                className="mr-2 h-5 w-5 border-2"
                               />
                             </div>
                           </FormControl>
