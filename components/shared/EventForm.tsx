@@ -24,8 +24,7 @@ import Dropdown from './Dropdown'
 import FileUploader from './FileUploader'
 import { useState } from 'react'
 import Image from 'next/image'
-import { uploadImage } from '@/app/api/images/upload/route'
-import { PutBlobResult } from '@vercel/blob'
+import { PutBlobResult, put } from '@vercel/blob'
 import { useRouter } from 'next/navigation'
 import { createEvent } from '@/lib/actions/event.actions'
 
@@ -49,8 +48,10 @@ const EventForm = ({ userId, type }: EventFormProps) => {
     let uploadedImageUrl = values.imageUrl
 
     if (files.length > 0) {
-      const imageResult = await uploadImage(files[0])
-      const uploadedImage = (await imageResult.json()) as PutBlobResult
+      const uploadedImage = await put(files[0].name, files[0], {
+        access: 'public',
+      });
+      // const uploadedImage = (await imageResult.json()) as PutBlobResult
       console.log(uploadedImage)
 
       if (!uploadedImage) return
