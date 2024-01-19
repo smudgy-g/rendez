@@ -13,7 +13,7 @@ export interface IEvent extends Document {
   isFree: boolean
   url?: boolean
   category: { _id: string; name: string }
-  organiser: { _id: string; firstName: string; lastname: string }
+  organiser: { _id: string; firstName: string; lastName: string }
 }
 
 const EventSchema = new Schema({
