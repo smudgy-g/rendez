@@ -186,11 +186,11 @@
 
   /* SHADCN OVERRIDES */
   .select-field {
-    @apply w-full bg-grey-50 h-[54px] placeholder:text-grey-500 rounded-full p-regular-16 px-5 py-3 border-none focus-visible:ring-transparent focus:ring-transparent !important;
+    @apply w-full bg-grey-50 h-[54px] placeholder:text-grey-500 p-regular-16 px-5 py-3 border-none focus-visible:ring-transparent focus:ring-transparent !important;
   }
 
   .input-field {
-    @apply bg-grey-50 h-[54px] focus-visible:ring-offset-0 placeholder:text-grey-500 rounded-full p-regular-16 px-4 py-3 border-none focus-visible:ring-transparent !important;
+    @apply bg-grey-50 h-[54px] focus-visible:ring-offset-0 placeholder:text-grey-500 p-regular-16 px-4 py-3 border-none focus-visible:ring-transparent !important;
   }
 
   .textarea {
@@ -198,7 +198,7 @@
   }
 
   .button {
-    @apply rounded-full h-[54px] p-regular-16;
+    @apply h-[54px] p-regular-16;
   }
 
   .select-item {
@@ -230,7 +230,7 @@
 .cl-formButtonPrimary:hover,
 .cl-formButtonPrimary:focus,
 .cl-formButtonPrimary:active {
-  background-color: #705cf7;
+  background-color: #ff6b6b;
 }
 
 /* ========================================== REACT-DATEPICKER STYLES */
@@ -246,11 +246,11 @@
 }
 
 .react-datepicker__day--selected {
-  background-color: #624cf5 !important;
+  background-color: #dc2626 !important;
   color: #ffffff !important;
   border-radius: 4px;
 }
 
 .react-datepicker__time-list-item--selected {
-  background-color: #624cf5 !important;
+  background-color: #dc2626 !important;
 }
