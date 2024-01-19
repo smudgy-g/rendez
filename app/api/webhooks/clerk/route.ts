@@ -50,10 +50,8 @@ export async function POST(req: Request) {
     })
   }
 
-  // Get the ID and type
   const { id } = evt.data
   const eventType = evt.type
-  console.log(eventType)
 
   if (eventType === 'user.created') {
     const { id, email_addresses, image_url, first_name, last_name, username } =
@@ -69,7 +67,6 @@ export async function POST(req: Request) {
     }
 
     const newUser = await createUser(user)
-    console.log(newUser)
 
     if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
@@ -104,7 +101,5 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'OK', user: deletedUser })
   }
  
-
   return new Response('', { status: 200 })
-
 }

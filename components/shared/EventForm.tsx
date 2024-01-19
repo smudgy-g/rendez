@@ -43,7 +43,6 @@ const EventForm = ({ userId, type }: EventFormProps) => {
   })
 
   async function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    // const eventData = values
     let uploadedImageUrl = values.imageUrl
 
     if (files.length > 0) {
@@ -56,12 +55,7 @@ const EventForm = ({ userId, type }: EventFormProps) => {
       );
 
       const uploadedImage = (await response.json()) as PutBlobResult;
-      // const uploadedImage = await put(files[0].name, files[0], {
-      //   access: 'public',
-      // })
-      // const uploadedImage = (await imageResult.json()) as PutBlobResult
-      console.log(uploadedImage)
-
+      
       if (!uploadedImage) return
 
       uploadedImageUrl = uploadedImage.url

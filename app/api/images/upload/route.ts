@@ -7,7 +7,6 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   if (!filename || !request.body)
     throw new Error('No filename or file provided.')
-  // ⚠️ The below code is for App Router Route Handlers only
   const blob = await put(filename, request.body, {
     access: 'public',
   })
