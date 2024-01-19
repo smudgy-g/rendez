@@ -47,9 +47,18 @@ const EventForm = ({ userId, type }: EventFormProps) => {
     let uploadedImageUrl = values.imageUrl
 
     if (files.length > 0) {
-      const uploadedImage = await put(files[0].name, files[0], {
-        access: 'public',
-      })
+      const response = await fetch(
+        `/api/images/upload?filename=${files[0].name}`,
+        {
+          method: 'POST',
+          body: files[0],
+        },
+      );
+
+      const uploadedImage = (await response.json()) as PutBlobResult;
+      // const uploadedImage = await put(files[0].name, files[0], {
+      //   access: 'public',
+      // })
       // const uploadedImage = (await imageResult.json()) as PutBlobResult
       console.log(uploadedImage)
 
