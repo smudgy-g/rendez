@@ -26,16 +26,27 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { PutBlobResult, put } from '@vercel/blob'
 import { useRouter } from 'next/navigation'
-import { createEvent } from '@/lib/actions/event.actions'
+import { createEvent, updateEvent } from '@/lib/actions/event.actions'
+import { IEvent } from '@/lib/database/models/event.model'
 
 type EventFormProps = {
   userId: string
-  type: 'Create' | 'Update'
+  type: 'CREATE' | 'UPDATE'
+  event?: IEvent
+  eventId?: string
 }
-const EventForm = ({ userId, type }: EventFormProps) => {
+
+const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
   const router = useRouter()
   const [files, setFiles] = useState<File[]>([])
-  const initialValues = eventDefaultValues
+  const initialValues =
+    event && type === 'UPDATE'
+      ? {
+          ...event,
+          startDateTime: new Date(event.startDateTime),
+          endDateTime: new Date(event.endDateTime),
+        }
+      : eventDefaultValues
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
@@ -51,16 +62,16 @@ const EventForm = ({ userId, type }: EventFormProps) => {
         {
           method: 'POST',
           body: files[0],
-        },
-      );
+        }
+      )
 
-      const uploadedImage = (await response.json()) as PutBlobResult;
-      
+      const uploadedImage = (await response.json()) as PutBlobResult
+
       if (!uploadedImage) return
 
       uploadedImageUrl = uploadedImage.url
     }
-    if (type == 'Create') {
+    if (type == 'CREATE') {
       try {
         const newEvent = await createEvent({
           event: { ...values, imageUrl: uploadedImageUrl },
@@ -71,6 +82,32 @@ const EventForm = ({ userId, type }: EventFormProps) => {
         if (newEvent) {
           form.reset()
           router.push(`/events/${newEvent._id}`)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    if (type == 'UPDATE') {
+      if (!eventId || !event) return router.back()
+      const imageToDelete = new URL(event.imageUrl)
+      console.log(imageToDelete)
+
+      try {
+        const updatedEvent = await updateEvent({
+          userId,
+          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
+          path: `/events/${eventId}`,
+        })
+
+        await fetch(`/api/images/delete`, {
+          method: 'DELETE',
+          body: JSON.stringify({ url: imageToDelete }),
+        })
+
+        if (updatedEvent) {
+          form.reset()
+          router.push(`/events/${updatedEvent._id}`)
         }
       } catch (error) {
         console.log(error)

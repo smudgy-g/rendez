@@ -31,7 +31,10 @@ const Collection = ({
               const hidePrice = collectionType == 'MY_TICKETS'
 
               return (
-                <li className="flex justify-center">
+                <li
+                  className="flex justify-center"
+                  key={event._id}
+                >
                   <Card
                     event={event}
                     hasOrderLink={hasOrderLink}
