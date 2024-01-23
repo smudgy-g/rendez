@@ -92,6 +92,11 @@ export async function deleteEvent({ eventId, path }: DeleteEventParams) {
     await connectToDB()
 
     const deletedEvent = await Event.findByIdAndDelete(eventId)
+
+    await fetch(`/api/images/delete?url=${deletedEvent.imageUrl}`, {
+      method: 'DELETE',
+    })
+
     if (deletedEvent) revalidatePath(path)
   } catch (error) {
     handleError(error)
@@ -196,4 +201,3 @@ export async function getRelatedEventsByCategory({
     handleError(error)
   }
 }
-
