@@ -111,7 +111,7 @@ const EventDetails = async ({
           collectionType="ALL_EVENTS"
           limit={6}
           page={1}
-          totalPages={2}
+          totalPages={relatedEvents?.totalPages}
         />
       </section>
     </>
