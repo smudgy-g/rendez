@@ -1,28 +1,27 @@
-import { IEvent } from '@/lib/database/models/event.model'
-import React, { FormEvent, useEffect } from 'react'
-import { Button } from '../ui/button'
+import React, { useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
+
+import { IEvent } from '@/lib/database/models/event.model'
+import { Button } from '../ui/button'
 import { checkoutOrder } from '@/lib/actions/order.actions'
 
-type CheckoutProps = {
-  event: IEvent
-  userId: string
-}
-
 loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
-const Checkout = ({ event, userId }: CheckoutProps) => {
+
+const Checkout = ({ event, userId }: { event: IEvent; userId: string }) => {
   useEffect(() => {
     // Check to see if this is a redirect back from Checkout
-    const query = new URLSearchParams(window.location.search);
+    const query = new URLSearchParams(window.location.search)
     if (query.get('success')) {
-      console.log('Order placed! You will receive an email confirmation.');
+      console.log('Order placed! You will receive an email confirmation.')
     }
 
     if (query.get('canceled')) {
-      console.log('Order canceled -- continue to shop around and checkout when you’re ready.');
+      console.log(
+        'Order canceled -- continue to shop around and checkout when you’re ready.'
+      )
     }
-  }, []);
-  
+  }, [])
+
   const onCheckout = async () => {
     const order = {
       eventTitle: event.title,
@@ -34,6 +33,7 @@ const Checkout = ({ event, userId }: CheckoutProps) => {
 
     await checkoutOrder(order)
   }
+
   return (
     <form
       action={onCheckout}

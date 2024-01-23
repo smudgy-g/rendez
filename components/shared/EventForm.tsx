@@ -91,7 +91,6 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
     if (type == 'UPDATE') {
       if (!eventId || !event) return router.back()
       const imageToDelete = new URL(event.imageUrl)
-      console.log(imageToDelete)
 
       try {
         const updatedEvent = await updateEvent({
@@ -100,9 +99,8 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           path: `/events/${eventId}`,
         })
 
-        await fetch(`/api/images/delete`, {
+        await fetch(`/api/images/delete?url=${imageToDelete}`, {
           method: 'DELETE',
-          body: JSON.stringify({ url: imageToDelete }),
         })
 
         if (updatedEvent) {

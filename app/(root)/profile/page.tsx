@@ -18,7 +18,7 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
   const orders = await getOrdersByUser({ userId, page: ordersPage })
 
   const orderedEvents = orders?.data.map((order: IOrder) => order.event) || []
-  const organizedEvents = await getEventsByUser({ userId, page: eventsPage })
+  const organisedEvents = await getEventsByUser({ userId, page: eventsPage })
 
   return (
     <>
@@ -63,14 +63,14 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
 
       <section className="wrapper my-8">
         <Collection
-          data={organizedEvents?.data}
+          data={organisedEvents?.data}
           emptyTitle="No events have been created yet"
           emptyStateSubtext="Go create some now"
           collectionType="EVENTS_ORGANISED"
           limit={3}
           page={eventsPage}
           urlParamName="eventsPage"
-          totalPages={organizedEvents?.totalPages}
+          totalPages={organisedEvents?.totalPages}
         />
       </section>
     </>

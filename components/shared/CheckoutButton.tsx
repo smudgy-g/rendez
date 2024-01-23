@@ -22,7 +22,7 @@ const CheckoutButton = ({ event }: CheckoutButtonProps) => {
     ): (
       <>
         <SignedOut>
-          <Button asChild className="button rounded-lg" size="lg">
+          <Button asChild className="button rounded-2xl" size="lg">
             <Link href="/sign-in">
               Get Tickets
             </Link>

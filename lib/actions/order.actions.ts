@@ -3,6 +3,7 @@
 import {
   CheckoutOrderParams,
   CreateOrderParams,
+  GetOrdersByEventParams,
   GetOrdersByUserParams,
 } from '@/types'
 import { handleError } from '../utils'
@@ -12,9 +13,10 @@ import Event from '../database/models/event.model'
 import User from '../database/models/user.model'
 import Stripe from 'stripe'
 import { redirect } from 'next/navigation'
+import { ObjectId } from 'mongodb'
 
 export const checkoutOrder = async (order: CheckoutOrderParams) => {
-  const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
   const price = order.isFree ? 0 : Number(order.price) * 100
 
@@ -23,7 +25,7 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
       line_items: [
         {
           price_data: {
-            currency: 'eur',
+            currency: 'usd',
             unit_amount: price,
             product_data: {
               name: order.eventTitle,
@@ -40,9 +42,10 @@ export const checkoutOrder = async (order: CheckoutOrderParams) => {
       success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
       cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
     })
+
     redirect(session.url!)
   } catch (error) {
-    handleError(error)
+    throw error
   }
 }
 
@@ -82,7 +85,7 @@ export const getOrdersByUser = async ({
         path: 'event',
         model: Event,
         populate: {
-          path: 'organizer',
+          path: 'organiser',
           model: User,
           select: '_id firstName lastName',
         },
@@ -96,6 +99,61 @@ export const getOrdersByUser = async ({
       data: JSON.parse(JSON.stringify(orders)),
       totalPages: Math.ceil(ordersCount / limit),
     }
+  } catch (error) {
+    handleError(error)
+  }
+}
+
+export async function getOrdersByEvent({ searchString, eventId }: GetOrdersByEventParams) {
+  try {
+    await connectToDB()
+
+    if (!eventId) throw new Error('Event ID is required')
+    const eventObjectId = new ObjectId(eventId)
+
+    const orders = await Order.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'buyer',
+          foreignField: '_id',
+          as: 'buyer',
+        },
+      },
+      {
+        $unwind: '$buyer',
+      },
+      {
+        $lookup: {
+          from: 'events',
+          localField: 'event',
+          foreignField: '_id',
+          as: 'event',
+        },
+      },
+      {
+        $unwind: '$event',
+      },
+      {
+        $project: {
+          _id: 1,
+          totalAmount: 1,
+          createdAt: 1,
+          eventTitle: '$event.title',
+          eventId: '$event._id',
+          buyer: {
+            $concat: ['$buyer.firstName', ' ', '$buyer.lastName'],
+          },
+        },
+      },
+      {
+        $match: {
+          $and: [{ eventId: eventObjectId }, { buyer: { $regex: RegExp(searchString, 'i') } }],
+        },
+      },
+    ])
+
+    return JSON.parse(JSON.stringify(orders))
   } catch (error) {
     handleError(error)
   }
