@@ -29,7 +29,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
             </h1>
             <p className="p-regular-20 md:p-regular-24">
               Rendezvous with old and new friends or create your very own
-              events. If you create it, they will come.
+              events on our free to use platform.
             </p>
             <Button
               size="lg"
@@ -53,7 +53,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         className="wrapper my-8 flex flex-col gap-8 md:gap-12"
       >
         <h2 className="h2-bold">
-          Trusted by <br /> Thousands of events
+          If you promote it, <br /> They will come.
         </h2>
         <div className="flex w-full flex-col gap-5 md:flex-row">
           <Search />
