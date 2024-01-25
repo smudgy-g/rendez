@@ -16,8 +16,8 @@ const Header = () => {
         >
           <Image
             src={'/assets/images/logo.svg'}
-            width={128}
-            height={38}
+            width={200}
+            height={45}
             alt="Rendez Logo"
           />
         </Link>
