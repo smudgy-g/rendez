@@ -10,8 +10,8 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: 'Rendez',
-  description: 'Rendez is an event management and promotion.',
+  title: 'Rendezvous',
+  description: 'Rendezvous is an event management and promotion.',
   icons: {
     icon: '/assets/images/logo.svg',
   },
